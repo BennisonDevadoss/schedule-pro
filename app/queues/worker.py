@@ -24,6 +24,11 @@ celery_app.conf.update(
         "tasks.crawl_urls_task": {"queue": "crawler"},
         "tasks.upload_file_task": {"queue": "document"},
     },
+    # Increase task timeout to handle long-running embedding operations
+    # task_soft_time_limit=600,  # 10 minutes soft limit
+    # task_time_limit=900,  # 15 minutes hard limit
+    # # Disable prefetching to avoid blocking other tasks
+    # worker_prefetch_multiplier=1,
 )
 
 # PYTHONPATH=. celery -A queues.worker worker --loglevel=info -Q emails,priority_high,default

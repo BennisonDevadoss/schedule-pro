@@ -8,5 +8,5 @@ class ChromaVectorService(BaseVectorService):
         return Chroma(
             embedding_function=self.embedding_model,
             collection_name=self.collection_name,
-            persist_directory="./chroma_db"
+            persist_directory="./chroma_db",
         )
