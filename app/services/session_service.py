@@ -6,7 +6,9 @@ from config.models import User
 from dependencies.auth import create_access_token
 from utils.password_utils import verify_password
 from schemas.session_schema import UserSigninParams
+from schemas.calendar_schema import CalendarSettingsCreate
 from exceptions.custom_errors import UnauthorizedException
+from services import calendar_service, knowledgebase_service
 
 
 def get_user_by_email(db: Session, email: str) -> User | None:
@@ -35,5 +37,27 @@ def signin_user(db: Session, params: UserSigninParams) -> tuple[User, str]:
     user.current_sign_in_ip = params.ip_address
     user.sign_in_count += 1
     db.commit()
+
+    # Create calendar settings if they don't exist
+    # This ensures every user has calendar settings after login
+    try:
+        existing_settings = calendar_service.get_calendar_settings_by_user_id(db, user.id)
+        if not existing_settings:
+            # Create default calendar settings
+            default_settings = CalendarSettingsCreate()
+            calendar_service.create_calendar_settings(db, user.id, default_settings)
+    except Exception as e:
+        # If calendar settings creation fails, rollback and fail the login
+        db.rollback()
+        raise Exception(f"Failed to initialize calendar settings: {str(e)}")
+    
+    # Create default knowledge base if user doesn't have any
+    # This ensures every user has at least one knowledge base
+    try:
+        knowledgebase_service.get_or_create_default_knowledge_base(db, user.id)
+    except Exception as e:
+        # If knowledge base creation fails, rollback and fail the login
+        db.rollback()
+        raise Exception(f"Failed to initialize knowledge base: {str(e)}")
 
     return user, access_token
