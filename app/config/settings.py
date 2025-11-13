@@ -71,6 +71,10 @@ class Settings(BaseSettings):
     CALENDAR_WORKING_HOURS_START: int | None = Field(default=9)  # 9 AM
     CALENDAR_SLOT_DURATION_MINUTES: int | None = Field(default=30)  # 30 Min
 
+    # Google OAuth for Calendar
+    GOOGLE_CLIENT_ID: str | None = Field(default=None)
+    GOOGLE_CLIENT_SECRET: str | None = Field(default=None)
+
     LANGSMITH_TRACING: str = Field(default="true")
     LANGSMITH_ENDPOINT: AnyHttpUrl | str = Field(
         default="https://api.smith.langchain.com"
