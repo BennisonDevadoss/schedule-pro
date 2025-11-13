@@ -38,3 +38,16 @@ class VECTOR_DB_PROVIDERS(str, Enum):
 class GOOGLE_CALENDAR_CONFIGS(str, Enum):
     MEET_LOCATION = "Remote"
     DEFAULT_TIMEZONE = "Asia/Kolkata"
+
+
+class CALENDAR_PROVIDERS(str, Enum):
+    GOOGLE = "google"
+    OUTLOOK = "outlook"
+    APPLE = "apple"
+
+
+class DATASOURCE_STATUS(str, Enum):
+    PENDING = "pending"
+    PROCESSING = "processing"
+    COMPLETED = "completed"
+    FAILED = "failed"
