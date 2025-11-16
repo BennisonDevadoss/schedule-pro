@@ -1,7 +1,7 @@
 import uuid
 from typing import Annotated, Any
 
-from fastapi import APIRouter, HTTPException, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from services import conversation_service
@@ -44,9 +44,7 @@ async def create_conversation(
         return ConversationResponse.model_validate(conversation)
     except Exception as e:
         logger.exception(e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-        )
+        raise e
 
 
 @conversation_router.get("", status_code=status.HTTP_200_OK)
@@ -82,9 +80,7 @@ async def get_conversations(
         return paginate(pagination_meta, conversation_responses, "conversations")
     except Exception as e:
         logger.exception(e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-        )
+        raise e
 
 
 @conversation_router.get(
