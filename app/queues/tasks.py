@@ -1,4 +1,5 @@
 import asyncio
+import nest_asyncio
 
 from celery import Task
 
@@ -10,6 +11,10 @@ from utils.crawler import crawl_urls_task_async
 from config.settings import SETTINGS
 from config.vector_db import vector_db
 from datetime import datetime
+
+# Enable nested event loops for Celery workers
+# This allows async operations (like GoogleGenerativeAI embeddings) to work in Celery tasks
+nest_asyncio.apply()
 
 
 class BaseTask(Task):
